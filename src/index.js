@@ -1,140 +1,192 @@
-// Импорты других файлов и компонентов
 
-import "./css/styles.css";
-import PicsApiService from "./apiservice";
+// // создаем функцию феча
 
-// Импорты библиотек и инициализация
-
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-import Notiflix from 'notiflix';
-Notiflix.Notify.init({ cssAnimationStyle: "zoom", fontAwesomeIconStyle: "shadow" });
-
-// Доступ к дом-елементам
-
-const refs = {
-    input: document.querySelector("input"),
-    form: document.querySelector(".search-form"),
-    buttonSearch: document.querySelector(".search-btn"),
-    buttonLoadMore: document.querySelector(".load-more"),
-    gallery:document.querySelector(".gallery")
-    
-}
-
-// Слушатели событий
-
-refs.form.addEventListener("submit", onSearch); 
-refs.buttonLoadMore.addEventListener("click", onLoad);
-
-
-refs.buttonLoadMore.style.display = 'none';
-const picsApiService = new PicsApiService();
+// async function getData() {
+//   const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+//   const data = await response.json();
+//   return data;
+// }
 
 
 
-function onSearch(event) {
-  event.preventDefault();
+//         let myQuery = "";
+//         let currentPage = 1;
+//         let rows = 10;
+
+
+// async function fetchPicsPixabay() {
+//   const API_KEY = "32855803-d56bfd48c48aac08c2ef5d962";
+//   const BASE_URL = "https://pixabay.com/api";
+//   const FULL_URL = `${BASE_URL}/?key=${API_KEY}&q=${myQuery}&image_type="photo"&orientation="horizontal"&safesearch=true&page=${currentPage}&per_page=${rows}`
+
+
+//   const response = await fetch(FULL_URL);
+//   const data = await response.json();
+//   return data;
+// }
+
+
+// const input = document.querySelector("input");
+// const form = document.querySelector(".search-form");
+// const gallery = document.querySelector(".gallery");
+
+
+
+// form.addEventListener("submit", onSearch);
+
+
+// async function onSearch(event) {
+
+//   event.preventDefault();
+//   myQuery = event.currentTarget.elements.searchQuery.value;
+//   console.log(myQuery);
   
-  picsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
-  picsApiService.resetPage();
-
-  if (picsApiService.query === "") {
-    Notiflix.Notify.warning('Please, type something.');
-    return;
-  }
-
-  refs.buttonLoadMore.style.display = 'none';
-  // clearAll();
+//   let recievedData = await fetchPicsPixabay();
   
-  // Если инпут не пустой - сделай фетч
-        
-  picsApiService.fetchPicsPixabay()
-    .then(({ hits, totalHits }) => {
+// function createGallerySkelleton(arrData, rowPerPage, page) {
 
-      if (hits.length > 0) {
-        clearAll();
-        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-        createMarkup(hits);
-        new SimpleLightbox('.gallery a');
-        refs.buttonLoadMore.style.display = 'block';
-
-      } else {
-        clearAll();
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      }
-    })
-    .catch(error => console.log('ERROR: ' + error));
-}
-
-// Не обрабатывается ошибка 400
-
-function onLoad() {
+//   // gallery.innerHTML = "";
+//   // page--;
 
 
-  picsApiService.fetchPicsPixabay().then(({ hits }) => {
-
-    if (hits.length === 0) {
-      refs.buttonLoadMore.style.display = 'none';
-      Notiflix.Notify.info(
-        "We're sorry, but you've reached the end of search results."
-      )
-      return;
-    }
-
-    createMarkup(hits);
-    new SimpleLightbox('.gallery a').refresh();
-
-
-    const { height: cardHeight } = document
-      .querySelector(".gallery")
-      .firstElementChild.getBoundingClientRect();
-
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: "smooth",
-    });
-
-  }).catch(error => Notiflix.Notify.info(error.message));
-}
-
-
-function createMarkup(value) {
-
+//   const start = rowPerPage * page;
+//     const end = start + rowPerPage;
+//   // const paginatedData = arrData.slice(start, end);
   
-
-  const markup = value.map(hit => 
+//   const markup = arrData.map(el =>
     
 
-    `<div class="general-photo-card-container">    
+//     `<div class="general-photo-card-container">
     
   
-        <a class="gallery-img-link" href="${hit.largeImageURL}">
+//         <a class="gallery-img-link" href="${el.largeImageURL}">
         
-          <img
-            class="gallery-image"
-            src="${hit.webformatURL}"
-            alt="${hit.tags}"
-            loading="lazy"
-        />
+//           <img
+//             class="gallery-image"
+//             src="${el.webformatURL}"
+//             alt="${el.tags}"
+//             loading="lazy"
+//         />
         
-        </a>
+//         </a>
         
-        <div class="img-general-info-container">
-          <p><b>Likes</b><br>${hit.likes}</br></p>
-          <p><b>Views</b><br>${hit.views}</br></p>
-          <p><b>Comments</b><br>${hit.comments}</br></p>
-          <p><b>Downloads</b><br>${hit.downloads}</br></p>
-        </div>
-      </div>` ).join("");
+//         <div class="img-general-info-container">
+//           <p><b>Likes</b><br>${el.likes}</br></p>
+//           <p><b>Views</b><br>${el.views}</br></p>
+//           <p><b>Comments</b><br>${el.comments}</br></p>
+//           <p><b>Downloads</b><br>${el.downloads}</br></p>
+//         </div>
+//       </div>` ).join("");
   
    
-  refs.gallery.insertAdjacentHTML("beforeend", markup);
+//   gallery.insertAdjacentHTML("beforeend", markup);
+//   }
   
-}
+
+  
+// function displayMyPagination(arrData, rowPerPage) {
+//   const paginationOnPage = document.querySelector("pagination");
+//   const pagesCount = Math.ceil(arrData.length / rowPerPage);
+//   const ulEl = document.createElement("ul");
+
+//   ulEl.classList.add('pagination__list');
+//   for (let i = 0; i < pagesCount; i++) {
+//       const liEl = createGallerySkelleton(i + 1);
+//       ulEl.appendChild(liEl)
+//     }
+//   paginationOnPage.appendChild(ulEl)
+//  }
 
 
-function clearAll() {
-  refs.gallery.innerHTML = "";
-}
+// function showPaginationBtn(page) {
+//   const liEl = document.createElement("li");
+//     liEl.classList.add('pagination__item')
+//   liEl.innerText = page;
+//   if (currentPage == page) liEl.classList.add('pagination__item--active');
+
+//     liEl.addEventListener('click', () => {
+//       currentPage = page
+//       createGallerySkelleton(recievedData, rows, currentPage)
+
+//       let currentItemLi = document.querySelector('li.pagination__item--active');
+//       currentItemLi.classList.remove('pagination__item--active');
+
+//       liEl.classList.add('pagination__item--active');
+//     })
+
+//     return liEl;
+// }
+
+
+
+//    createGallerySkelleton(recievedData, rows, currentPage);
+//   showPaginationBtn(recievedData, rows);
+// }
+
+
+
+
+
+
+
+
+// async function main() {
+//   const postsData = await getData();
+//   let currentPage = 1;
+//   let rows = 10;
+
+//   function displayList(arrData, rowPerPage, page) {
+//     const postsEl = document.querySelector('.posts');
+//     postsEl.innerHTML = "";
+//     page--;
+
+//     const start = rowPerPage * page;
+//     const end = start + rowPerPage;
+//     const paginatedData = arrData.slice(start, end);
+
+//     paginatedData.forEach((el) => {
+//       const postEl = document.createElement("div");
+//       postEl.classList.add("post");
+//       postEl.innerText = `${el.title}`;
+//       postsEl.appendChild(postEl);
+//     })
+//   }
+
+//   function displayPagination(arrData, rowPerPage) {
+//     const paginationEl = document.querySelector('.pagination');
+//     const pagesCount = Math.ceil(arrData.length / rowPerPage);
+//     const ulEl = document.createElement("ul");
+//     ulEl.classList.add('pagination__list');
+
+//     for (let i = 0; i < pagesCount; i++) {
+//       const liEl = displayPaginationBtn(i + 1);
+//       ulEl.appendChild(liEl)
+//     }
+//     paginationEl.appendChild(ulEl)
+//   }
+
+//   function displayPaginationBtn(page) {
+//     const liEl = document.createElement("li");
+//     liEl.classList.add('pagination__item')
+//     liEl.innerText = page
+
+//     if (currentPage == page) liEl.classList.add('pagination__item--active');
+
+//     liEl.addEventListener('click', () => {
+//       currentPage = page
+//       displayList(postsData, rows, currentPage)
+
+//       let currentItemLi = document.querySelector('li.pagination__item--active');
+//       currentItemLi.classList.remove('pagination__item--active');
+
+//       liEl.classList.add('pagination__item--active');
+//     })
+
+//     return liEl;
+//   }
+
+//   displayList(postsData, rows, currentPage);
+//   displayPagination(postsData, rows);
+// }
+
+// main();
